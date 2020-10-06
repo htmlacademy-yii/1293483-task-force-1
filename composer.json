@@ -1,0 +1,17 @@
+{
+    "name": "seeto/task-force",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Svetlana Lopareva",
+            "email": "seetochka95@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+      "psr-4": {
+        "htmlacademy\\": "src/"
+      }
+    }
+}
