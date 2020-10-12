@@ -1,5 +1,5 @@
 <?php
-namespace htmlacademy;
+namespace htmlacademy\models;
 
 class Task
 {
@@ -36,7 +36,10 @@ class Task
     ];
     const MAP_AVAILABLE_ACTIONS = [
         self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_RESPOND],
+        self::STATUS_CANCELED => [],
         self::STATUS_IN_WORK => [self::ACTION_COMPLETE, self::ACTION_REFUSE],
+        self::STATUS_DONE => [],
+        self::STATUS_FAILED => [],
     ];
 
     private $executorId;
