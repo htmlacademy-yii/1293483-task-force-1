@@ -5,7 +5,9 @@ ini_set('display_errors', 1);
 require_once 'vendor/autoload.php';
 use htmlacademy\models\Task;
 
-$task = new Task(3, 5);
+$customerId = 3;
+$executorId = 5;
+$task = new Task($customerId, $executorId);
 
 assert($task->getStatus() === 'new');
 
@@ -20,21 +22,13 @@ foreach ($mapStatusByAction as $action => $status) {
     assert($task->getStatusByAction($action) === $status, 'Неправильный статус ' . $status . ' для действия ' . $action);
 }
 
-$mapAvailableActions = [
-    'new' => ['cancel', 'respond'],
-    'canceled' => [],
-    'inWork' => ['complete', 'refuse'],
-    'done' => [],
-    'failed' => [],
-];
-
-foreach ($mapAvailableActions as $status => $actions) {
-    $taskActions = $task->getAvailableActions($status);
-
-    foreach ($taskActions as $value) {
-        assert(in_array($value, $actions), 'Недоступное действие ' . $value . ' для статуса ' . $status);
-    }
-}
+assert($task->getAvailableActions('new', $customerId)->getTitle() === 'Отменить', 'Задание в статусе «Новое» можно отменить, но сделать это может только автор задания');
+assert($task->getAvailableActions('new', $executorId)->getTitle() === 'Откликнуться', 'На задание в статусе «Новое» может откликнуться только исполнитель');
+assert($task->getAvailableActions('canceled', $customerId) === null, 'Задание в статусе «Отменено» не имеет доступных действий');
+assert($task->getAvailableActions('inWork', $executorId)->getTitle() === 'Отказаться', 'Задание в статусе «В работе» может отменить только исполнитель');
+assert($task->getAvailableActions('inWork', $customerId)->getTitle() === 'Выполнено', 'Задание в статусе «В работе» может отметить выполненным только заказчик');
+assert($task->getAvailableActions('done', $executorId) === null, 'Задание в статусе «Выполнено» не имеет доступных действий');
+assert($task->getAvailableActions('failed', $executorId) === null, 'Задание в статусе «Провалено» не имеет доступных действий');
 
 $mapStatuses = [
     'new' => 'Новое',
