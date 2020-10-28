@@ -8,6 +8,7 @@ use htmlacademy\models\Task;
 $customerId = 3;
 $executorId = 5;
 $task = new Task($customerId, $executorId);
+$task->setStatus('new');
 
 assert($task->getStatus() === 'new');
 
@@ -22,13 +23,29 @@ foreach ($mapStatusByAction as $action => $status) {
     assert($task->getStatusByAction($action) === $status, 'Неправильный статус ' . $status . ' для действия ' . $action);
 }
 
-assert($task->getAvailableActions('new', $customerId)->getTitle() === 'Отменить', 'Задание в статусе «Новое» можно отменить, но сделать это может только автор задания');
-assert($task->getAvailableActions('new', $executorId)->getTitle() === 'Откликнуться', 'На задание в статусе «Новое» может откликнуться только исполнитель');
-assert($task->getAvailableActions('canceled', $customerId) === null, 'Задание в статусе «Отменено» не имеет доступных действий');
-assert($task->getAvailableActions('inWork', $executorId)->getTitle() === 'Отказаться', 'Задание в статусе «В работе» может отменить только исполнитель');
-assert($task->getAvailableActions('inWork', $customerId)->getTitle() === 'Выполнено', 'Задание в статусе «В работе» может отметить выполненным только заказчик');
-assert($task->getAvailableActions('done', $executorId) === null, 'Задание в статусе «Выполнено» не имеет доступных действий');
-assert($task->getAvailableActions('failed', $executorId) === null, 'Задание в статусе «Провалено» не имеет доступных действий');
+foreach ($task->getAvailableActions($customerId) as $action) {
+    assert($action::getTitle() === 'Отменить', 'Задание в статусе «Новое» можно отменить, но сделать это может только автор задания');
+}
+foreach ($task->getAvailableActions($executorId) as $action) {
+    assert($action::getTitle() === 'Откликнуться', 'На задание в статусе «Новое» может откликнуться только исполнитель');
+}
+
+$task->setStatus('canceled');
+assert($task->getAvailableActions($customerId) === null, 'Задание в статусе «Отменено» не имеет доступных действий');
+
+$task->setStatus('inWork');
+foreach ($task->getAvailableActions($executorId) as $action) {
+    assert($action::getTitle() === 'Отказаться', 'Задание в статусе «В работе» может отменить только исполнитель');
+}
+foreach ($task->getAvailableActions($customerId) as $action) {
+    assert($action::getTitle() === 'Выполнено', 'Задание в статусе «В работе» может отметить выполненным только заказчик');
+}
+
+$task->setStatus('done');
+assert($task->getAvailableActions($executorId) === null, 'Задание в статусе «Выполнено» не имеет доступных действий');
+
+$task->setStatus('failed');
+assert($task->getAvailableActions($executorId) === null, 'Задание в статусе «Провалено» не имеет доступных действий');
 
 $mapStatuses = [
     'new' => 'Новое',

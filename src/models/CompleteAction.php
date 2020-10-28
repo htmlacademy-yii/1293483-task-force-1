@@ -3,18 +3,18 @@ namespace htmlacademy\models;
 
 class CompleteAction extends AbstractAction
 {
-    public function getTitle()
+    public static function getTitle()
     {
         return 'Выполнено';
     }
 
-    public function getName()
+    public static function getName()
     {
         return 'complete';
     }
 
-    public  function isActionAvailable($userId, $customerId, $executorId)
+    public static function isActionAvailable($userId, Task $task)
     {
-        return $userId === $customerId ? true : false;
+        return $userId === $task->customerId;
     }
 }

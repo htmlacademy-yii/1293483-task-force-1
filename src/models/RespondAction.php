@@ -3,18 +3,18 @@ namespace htmlacademy\models;
 
 class RespondAction extends AbstractAction
 {
-    public function getTitle()
+    public static function getTitle()
     {
         return 'Откликнуться';
     }
 
-    public function getName()
+    public static function getName()
     {
         return 'respond';
     }
 
-    public  function isActionAvailable($userId, $customerId, $executorId)
+    public static function isActionAvailable($userId, Task $task)
     {
-        return $userId === $executorId ? true : false;
+        return $userId === $task->executorId;
     }
 }

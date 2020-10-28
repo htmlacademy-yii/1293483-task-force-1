@@ -3,9 +3,9 @@ namespace htmlacademy\models;
 
 abstract class AbstractAction
 {
-    abstract public function getTitle();
+    abstract public static function getTitle();
 
-    abstract public function getName();
+    abstract public static function getName();
 
-    abstract public function isActionAvailable($userId, $customerId, $executorId);
+    abstract public static function isActionAvailable($userId, Task $task);
 }

@@ -3,18 +3,18 @@ namespace htmlacademy\models;
 
 class RefuseAction extends AbstractAction
 {
-    public function getTitle()
+    public static function getTitle()
     {
         return 'Отказаться';
     }
 
-    public function getName()
+    public static function getName()
     {
         return 'refuse';
     }
 
-    public  function isActionAvailable($userId, $customerId, $executorId)
+    public static function isActionAvailable($userId, Task $task)
     {
-        return $userId === $executorId ? true : false;
+        return $userId === $task->executorId;
     }
 }

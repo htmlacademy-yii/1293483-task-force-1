@@ -42,13 +42,12 @@ class Task
         self::STATUS_FAILED => [],
     ];
 
-    private $executorId;
-    private $customerId;
-    private $status;
+    public $executorId;
+    public $customerId;
+    public $status;
 
     public function __construct($customerId, $executorId)
     {
-        $this->status = self::STATUS_NEW;
         $this->customerId = $customerId;
         $this->executorId = $executorId;
     }
@@ -56,6 +55,11 @@ class Task
     public function getStatus()
     {
         return $this->status;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 
     public function getMapActions()
@@ -73,18 +77,12 @@ class Task
         return self::MAP_STATUS_BY_ACTION[$action];
     }
 
-    public function getAvailableActions($status, $userId)
+    public function getAvailableActions($userId)
     {
-        $actions = self::MAP_AVAILABLE_ACTIONS[$status];
+        $actions = array_filter(self::MAP_AVAILABLE_ACTIONS[$this->status], function ($action) use ($userId) {
+            return $action::isActionAvailable($userId, $this);
+        });
 
-        foreach ($actions as $action) {
-            $instance = new $action();
-
-            if ($instance->isActionAvailable($userId, $this->customerId, $this->executorId)) {
-                return $instance;
-            }
-        }
-
-        return null;
+        return $actions ?: null;
     }
 }
