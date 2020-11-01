@@ -35,27 +35,31 @@ class Task
         self::ACTION_REFUSE => self::STATUS_FAILED
     ];
     const MAP_AVAILABLE_ACTIONS = [
-        self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_RESPOND],
+        self::STATUS_NEW => [CancelAction::class, RespondAction::class],
         self::STATUS_CANCELED => [],
-        self::STATUS_IN_WORK => [self::ACTION_COMPLETE, self::ACTION_REFUSE],
+        self::STATUS_IN_WORK => [CompleteAction::class, RefuseAction::class],
         self::STATUS_DONE => [],
         self::STATUS_FAILED => [],
     ];
 
-    private $executorId;
-    private $customerId;
-    private $status;
+    public $executorId;
+    public $customerId;
+    public $status;
 
-    public function __construct($executorId, $customerId)
+    public function __construct($customerId, $executorId)
     {
-        $this->status = self::STATUS_NEW;
-        $this->executorId = $executorId;
         $this->customerId = $customerId;
+        $this->executorId = $executorId;
     }
 
     public function getStatus()
     {
         return $this->status;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 
     public function getMapActions()
@@ -73,8 +77,12 @@ class Task
         return self::MAP_STATUS_BY_ACTION[$action];
     }
 
-    public function getAvailableActions($status)
+    public function getAvailableActions($userId)
     {
-        return self::MAP_AVAILABLE_ACTIONS[$status];
+        $actions = array_filter(self::MAP_AVAILABLE_ACTIONS[$this->status], function ($action) use ($userId) {
+            return $action::isActionAvailable($userId, $this);
+        });
+
+        return $actions ?: null;
     }
 }

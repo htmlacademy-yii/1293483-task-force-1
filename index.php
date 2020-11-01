@@ -5,7 +5,10 @@ ini_set('display_errors', 1);
 require_once 'vendor/autoload.php';
 use htmlacademy\models\Task;
 
-$task = new Task(3, 5);
+$customerId = 3;
+$executorId = 5;
+$task = new Task($customerId, $executorId);
+$task->setStatus('new');
 
 assert($task->getStatus() === 'new');
 
@@ -20,21 +23,29 @@ foreach ($mapStatusByAction as $action => $status) {
     assert($task->getStatusByAction($action) === $status, 'Неправильный статус ' . $status . ' для действия ' . $action);
 }
 
-$mapAvailableActions = [
-    'new' => ['cancel', 'respond'],
-    'canceled' => [],
-    'inWork' => ['complete', 'refuse'],
-    'done' => [],
-    'failed' => [],
-];
-
-foreach ($mapAvailableActions as $status => $actions) {
-    $taskActions = $task->getAvailableActions($status);
-
-    foreach ($taskActions as $value) {
-        assert(in_array($value, $actions), 'Недоступное действие ' . $value . ' для статуса ' . $status);
-    }
+foreach ($task->getAvailableActions($customerId) as $action) {
+    assert($action::getTitle() === 'Отменить', 'Задание в статусе «Новое» можно отменить, но сделать это может только автор задания');
 }
+foreach ($task->getAvailableActions($executorId) as $action) {
+    assert($action::getTitle() === 'Откликнуться', 'На задание в статусе «Новое» может откликнуться только исполнитель');
+}
+
+$task->setStatus('canceled');
+assert($task->getAvailableActions($customerId) === null, 'Задание в статусе «Отменено» не имеет доступных действий');
+
+$task->setStatus('inWork');
+foreach ($task->getAvailableActions($executorId) as $action) {
+    assert($action::getTitle() === 'Отказаться', 'Задание в статусе «В работе» может отменить только исполнитель');
+}
+foreach ($task->getAvailableActions($customerId) as $action) {
+    assert($action::getTitle() === 'Выполнено', 'Задание в статусе «В работе» может отметить выполненным только заказчик');
+}
+
+$task->setStatus('done');
+assert($task->getAvailableActions($executorId) === null, 'Задание в статусе «Выполнено» не имеет доступных действий');
+
+$task->setStatus('failed');
+assert($task->getAvailableActions($executorId) === null, 'Задание в статусе «Провалено» не имеет доступных действий');
 
 $mapStatuses = [
     'new' => 'Новое',
