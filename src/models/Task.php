@@ -82,7 +82,7 @@ class Task
      */
     public function setStatus(string $status): void
     {
-        if (!array_key_exists($status, self::MAP_STATUSES)) {
+        if (!isset(self::MAP_STATUSES[$status])) {
             throw new IncorrectDataException('Указанный статус не существует: ' . $status);
         }
 
@@ -119,7 +119,7 @@ class Task
      */
     public function getStatusByAction(string $action): string
     {
-        if (!array_key_exists($action, self::MAP_ACTIONS)) {
+        if (!isset(self::MAP_ACTIONS[$action])) {
             throw new IncorrectDataException('Указанное действие не существует: ' . $action);
         }
 
