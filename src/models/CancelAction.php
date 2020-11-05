@@ -3,17 +3,35 @@ namespace htmlacademy\models;
 
 class CancelAction extends AbstractAction
 {
-    public static function getTitle()
+    /**
+     * Получение названия действия
+     *
+     * @return string
+     */
+    public static function getTitle(): string
     {
         return 'Отменить';
     }
 
-    public static function getName()
+    /**
+     * Получение внутреннего имени действия
+     *
+     * @return string
+     */
+    public static function getName(): string
     {
         return 'cancel';
     }
 
-    public static function isActionAvailable($userId, Task $task)
+    /**
+     * Проверка роли пользователя
+     *
+     * @param int $userId id пользователя
+     * @param Task $task Экземпляр задания
+     *
+     * @return bool
+     */
+    public static function isActionAvailable(int $userId, Task $task): bool
     {
         return $userId === $task->customerId;
     }

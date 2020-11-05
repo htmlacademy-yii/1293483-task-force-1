@@ -1,5 +1,9 @@
 <?php
+declare(strict_types = 1);
+
 namespace htmlacademy\models;
+
+use htmlacademy\exceptions\IncorrectDataException;
 
 class Task
 {
@@ -46,38 +50,90 @@ class Task
     public $customerId;
     public $status;
 
-    public function __construct($customerId, $executorId)
+    /**
+     * Конструктор
+     *
+     * @param int $customerId id заказчика
+     * @param int $executorId id исполнителя
+     */
+    public function __construct(int $customerId, int $executorId)
     {
         $this->customerId = $customerId;
         $this->executorId = $executorId;
     }
 
-    public function getStatus()
+    /**
+     * Получение статуса задачи
+     *
+     * @return string
+     */
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    public function setStatus($status)
+    /**
+     * Установка статуса задания
+     *
+     * @param string $status Статус
+     *
+     * @throws
+     * @return void
+     */
+    public function setStatus(string $status): void
     {
+        if (!isset(self::MAP_STATUSES[$status])) {
+            throw new IncorrectDataException('Указанный статус не существует: ' . $status);
+        }
+
         $this->status = $status;
     }
 
-    public function getMapActions()
+    /**
+     * Получение карты действий
+     *
+     * @return array
+     */
+    public function getMapActions(): array
     {
         return self::MAP_ACTIONS;
     }
 
-    public function getMapStatuses()
+    /**
+     * Получение карты статусов
+     *
+     * @return array
+     */
+    public function getMapStatuses(): array
     {
         return self::MAP_STATUSES;
     }
 
-    public function getStatusByAction($action)
+    /**
+     * Получение имя статуса, в который перейдёт задание после выполнения действия
+     *
+     * @param string $action Действие
+     *
+     * @throws
+     * @return string
+     */
+    public function getStatusByAction(string $action): string
     {
+        if (!isset(self::MAP_ACTIONS[$action])) {
+            throw new IncorrectDataException('Указанное действие не существует: ' . $action);
+        }
+
         return self::MAP_STATUS_BY_ACTION[$action];
     }
 
-    public function getAvailableActions($userId)
+    /**
+     * Получение доступного действия исходя из статуса задания и роли пользователя
+     *
+     * @param int $userId id пользователя
+     *
+     * @return array | null
+     */
+    public function getAvailableActions(int $userId): ?array
     {
         $actions = array_filter(self::MAP_AVAILABLE_ACTIONS[$this->status], function ($action) use ($userId) {
             return $action::isActionAvailable($userId, $this);

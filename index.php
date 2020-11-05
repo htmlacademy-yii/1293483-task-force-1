@@ -1,14 +1,21 @@
 <?php
+declare(strict_types = 1);
+ini_set('display_errors', 'On');
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 require_once 'vendor/autoload.php';
+
+use htmlacademy\exceptions\IncorrectDataException;
 use htmlacademy\models\Task;
 
 $customerId = 3;
 $executorId = 5;
 $task = new Task($customerId, $executorId);
-$task->setStatus('new');
+try {
+    $task->setStatus('new');
+} catch (IncorrectDataException $e) {
+    error_log("Не удалось установить статус: " . $e->getMessage());
+}
 
 assert($task->getStatus() === 'new');
 
@@ -20,7 +27,12 @@ $mapStatusByAction = [
 ];
 
 foreach ($mapStatusByAction as $action => $status) {
-    assert($task->getStatusByAction($action) === $status, 'Неправильный статус ' . $status . ' для действия ' . $action);
+    try {
+        $taskStatus = $task->getStatusByAction($action);
+    } catch (IncorrectDataException $e) {
+        error_log("Не удалось получить статус: " . $e->getMessage());
+    }
+    assert($taskStatus === $status, 'Неправильный статус ' . $status . ' для действия ' . $action);
 }
 
 foreach ($task->getAvailableActions($customerId) as $action) {
@@ -30,10 +42,18 @@ foreach ($task->getAvailableActions($executorId) as $action) {
     assert($action::getTitle() === 'Откликнуться', 'На задание в статусе «Новое» может откликнуться только исполнитель');
 }
 
-$task->setStatus('canceled');
+try {
+    $task->setStatus('canceled');
+} catch (IncorrectDataException $e) {
+    error_log("Не удалось установить статус: " . $e->getMessage());
+}
 assert($task->getAvailableActions($customerId) === null, 'Задание в статусе «Отменено» не имеет доступных действий');
 
-$task->setStatus('inWork');
+try {
+    $task->setStatus('inWork');
+} catch (IncorrectDataException $e) {
+    error_log("Не удалось установить статус: " . $e->getMessage());
+}
 foreach ($task->getAvailableActions($executorId) as $action) {
     assert($action::getTitle() === 'Отказаться', 'Задание в статусе «В работе» может отменить только исполнитель');
 }
@@ -41,10 +61,18 @@ foreach ($task->getAvailableActions($customerId) as $action) {
     assert($action::getTitle() === 'Выполнено', 'Задание в статусе «В работе» может отметить выполненным только заказчик');
 }
 
-$task->setStatus('done');
+try {
+    $task->setStatus('done');
+} catch (IncorrectDataException $e) {
+    error_log("Не удалось установить статус: " . $e->getMessage());
+}
 assert($task->getAvailableActions($executorId) === null, 'Задание в статусе «Выполнено» не имеет доступных действий');
 
-$task->setStatus('failed');
+try {
+    $task->setStatus('failed');
+} catch (IncorrectDataException $e) {
+    error_log("Не удалось установить статус: " . $e->getMessage());
+}
 assert($task->getAvailableActions($executorId) === null, 'Задание в статусе «Провалено» не имеет доступных действий');
 
 $mapStatuses = [
