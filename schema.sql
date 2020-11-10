@@ -6,23 +6,34 @@ USE taskforce;
 
 CREATE TABLE cities (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
+    name VARCHAR(100) NOT NULL,
+    latitude FLOAT NOT NULL,
+    longitude FLOAT NOT NULL
 );
 
 CREATE TABLE categories (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(50) NOT NULL UNIQUE,
-    alias VARCHAR(50) NOT NULL UNIQUE
+    name VARCHAR(50) NOT NULL UNIQUE,
+    icon VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE users (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    dt_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    dt_last_visit DATETIME,
-    dt_birth DATETIME,
     email VARCHAR(100) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
     password VARCHAR(64) NOT NULL,
+    dt_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    city_id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (city_id) REFERENCES cities(id),
+
+    FULLTEXT (name)
+);
+
+CREATE TABLE profiles (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    dt_last_visit DATETIME,
+    dt_birth DATETIME,
     avatar VARCHAR(100),
     info TEXT,
     phone VARCHAR(50),
@@ -37,10 +48,8 @@ CREATE TABLE users (
     show_contacts_customer INT UNSIGNED DEFAULT 0,
     show_profile INT UNSIGNED DEFAULT 0,
 
-    city_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (city_id) REFERENCES cities(id),
-
-    FULLTEXT (name)
+    user_id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE photos_of_works (
@@ -65,7 +74,8 @@ CREATE TABLE tasks (
     dt_end DATETIME,
     title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
-    price INT UNSIGNED,
+    address VARCHAR(50),
+    budget INT UNSIGNED,
     status VARCHAR(50),
     latitude VARCHAR(50),
     longitude VARCHAR(50),
@@ -90,11 +100,11 @@ CREATE TABLE files (
     FOREIGN KEY (task_id) REFERENCES tasks(id)
 );
 
-CREATE TABLE responses (
+CREATE TABLE replies (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     dt_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    content TEXT NOT NULL,
     price INT UNSIGNED NOT NULL,
+    content TEXT NOT NULL,
 
     user_id INT UNSIGNED NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
@@ -102,11 +112,11 @@ CREATE TABLE responses (
     FOREIGN KEY (task_id) REFERENCES tasks(id)
 );
 
-CREATE TABLE reviews (
+CREATE TABLE opinions (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     dt_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    rate INT UNSIGNED NOT NULL,
     content TEXT NOT NULL,
-    appraisal INT UNSIGNED NOT NULL,
 
     task_id INT UNSIGNED NOT NULL,
     FOREIGN KEY (task_id) REFERENCES tasks(id),
