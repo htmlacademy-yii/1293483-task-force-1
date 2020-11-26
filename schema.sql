@@ -4,20 +4,20 @@ CREATE DATABASE taskforce
 
 USE taskforce;
 
-CREATE TABLE cities (
+CREATE TABLE city (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     latitude FLOAT NOT NULL,
     longitude FLOAT NOT NULL
 );
 
-CREATE TABLE categories (
+CREATE TABLE category (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE,
     icon VARCHAR(50) NOT NULL UNIQUE
 );
 
-CREATE TABLE users (
+CREATE TABLE user (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
@@ -25,12 +25,12 @@ CREATE TABLE users (
     dt_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     city_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (city_id) REFERENCES cities(id),
+    FOREIGN KEY (city_id) REFERENCES city(id),
 
     FULLTEXT (name)
 );
 
-CREATE TABLE profiles (
+CREATE TABLE profile (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     dt_last_visit DATETIME,
     dt_birth DATETIME,
@@ -49,26 +49,26 @@ CREATE TABLE profiles (
     show_profile INT UNSIGNED DEFAULT 0,
 
     user_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
-CREATE TABLE photos_of_works (
+CREATE TABLE photo_of_work (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     url VARCHAR(100) NOT NULL,
 
     user_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
 CREATE TABLE user_specialization (
     user_id INT UNSIGNED NOT NULL,
     category_id INT UNSIGNED NOT NULL,
     PRIMARY KEY (user_id, category_id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+    FOREIGN KEY (user_id) REFERENCES user(id),
+    FOREIGN KEY (category_id) REFERENCES category(id)
 );
 
-CREATE TABLE tasks (
+CREATE TABLE task (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     dt_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     dt_end DATETIME,
@@ -81,69 +81,69 @@ CREATE TABLE tasks (
     longitude VARCHAR(50),
 
     category_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (category_id) REFERENCES categories(id),
+    FOREIGN KEY (category_id) REFERENCES category(id),
     customer_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES users(id),
+    FOREIGN KEY (customer_id) REFERENCES user(id),
     executor_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (executor_id) REFERENCES users(id),
+    FOREIGN KEY (executor_id) REFERENCES user(id),
     city_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (city_id) REFERENCES cities(id),
+    FOREIGN KEY (city_id) REFERENCES city(id),
 
     FULLTEXT (title)
 );
 
-CREATE TABLE files (
+CREATE TABLE file (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     url VARCHAR(100) NOT NULL,
 
     task_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (task_id) REFERENCES tasks(id)
+    FOREIGN KEY (task_id) REFERENCES task(id)
 );
 
-CREATE TABLE replies (
+CREATE TABLE reply (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     dt_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     price INT UNSIGNED NOT NULL,
     content TEXT NOT NULL,
 
     user_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (user_id) REFERENCES user(id),
     task_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (task_id) REFERENCES tasks(id)
+    FOREIGN KEY (task_id) REFERENCES task(id)
 );
 
-CREATE TABLE opinions (
+CREATE TABLE opinion (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     dt_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     rate INT UNSIGNED NOT NULL,
     content TEXT NOT NULL,
 
     task_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (task_id) REFERENCES tasks(id),
+    FOREIGN KEY (task_id) REFERENCES task(id),
     customer_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES users(id),
+    FOREIGN KEY (customer_id) REFERENCES user(id),
     executor_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (executor_id) REFERENCES users(id)
+    FOREIGN KEY (executor_id) REFERENCES user(id)
 );
 
-CREATE TABLE messages (
+CREATE TABLE message (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     dt_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     content TEXT NOT NULL,
     is_read INT UNSIGNED DEFAULT 0,
 
     sender_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (sender_id) REFERENCES users(id),
+    FOREIGN KEY (sender_id) REFERENCES user(id),
     receiver_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (receiver_id) REFERENCES users(id),
+    FOREIGN KEY (receiver_id) REFERENCES user(id),
     task_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (task_id) REFERENCES tasks(id)
+    FOREIGN KEY (task_id) REFERENCES task(id)
 );
 
 CREATE TABLE favorites (
     customer_id INT UNSIGNED NOT NULL,
     executor_id INT UNSIGNED NOT NULL,
     PRIMARY KEY (customer_id, executor_id),
-    FOREIGN KEY (customer_id) REFERENCES users(id),
-    FOREIGN KEY (executor_id) REFERENCES users(id)
+    FOREIGN KEY (customer_id) REFERENCES user(id),
+    FOREIGN KEY (executor_id) REFERENCES user(id)
 );
