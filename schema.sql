@@ -23,15 +23,6 @@ CREATE TABLE user (
     name VARCHAR(100) NOT NULL,
     password VARCHAR(64) NOT NULL,
     dt_add DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    city_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (city_id) REFERENCES city(id),
-
-    FULLTEXT (name)
-);
-
-CREATE TABLE profile (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     dt_last_visit DATETIME,
     dt_birth DATETIME,
     avatar VARCHAR(100),
@@ -48,8 +39,10 @@ CREATE TABLE profile (
     show_contacts_customer INT UNSIGNED DEFAULT 0,
     show_profile INT UNSIGNED DEFAULT 0,
 
-    user_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    city_id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (city_id) REFERENCES city(id),
+
+    FULLTEXT (name)
 );
 
 CREATE TABLE photo_of_work (

@@ -13,6 +13,21 @@ use yii\db\ActiveRecord;
  * @property string $name
  * @property string $password
  * @property string $dt_add
+ * @property string|null $dt_last_visit
+ * @property string|null $dt_birth
+ * @property string|null $avatar
+ * @property string|null $info
+ * @property string|null $phone
+ * @property string|null $skype
+ * @property string|null $telegram
+ * @property int|null $rating
+ * @property string $role
+ * @property int|null $view_count
+ * @property int|null $show_new_message
+ * @property int|null $show_task_actions
+ * @property int|null $show_new_review
+ * @property int|null $show_contacts_customer
+ * @property int|null $show_profile
  * @property int $city_id
  *
  * @property Favorites[] $favorites
@@ -24,7 +39,6 @@ use yii\db\ActiveRecord;
  * @property Opinion[] $opinions
  * @property Opinion[] $opinions0
  * @property PhotoOfWork[] $photoOfWorks
- * @property Profile[] $profiles
  * @property Reply[] $replies
  * @property Task[] $tasks
  * @property Task[] $tasks0
@@ -48,11 +62,13 @@ class User extends ActiveRecord
     public function rules()
     {
         return [
-            [['email', 'name', 'password', 'city_id'], 'required'],
-            [['dt_add'], 'safe'],
-            [['city_id'], 'integer'],
-            [['email', 'name'], 'string', 'max' => 100],
+            [['email', 'name', 'password', 'role', 'city_id'], 'required'],
+            [['dt_add', 'dt_last_visit', 'dt_birth'], 'safe'],
+            [['info'], 'string'],
+            [['rating', 'view_count', 'show_new_message', 'show_task_actions', 'show_new_review', 'show_contacts_customer', 'show_profile', 'city_id'], 'integer'],
+            [['email', 'name', 'avatar'], 'string', 'max' => 100],
             [['password'], 'string', 'max' => 64],
+            [['phone', 'skype', 'telegram', 'role'], 'string', 'max' => 50],
             [['email'], 'unique'],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
         ];
@@ -69,6 +85,21 @@ class User extends ActiveRecord
             'name' => 'Name',
             'password' => 'Password',
             'dt_add' => 'Dt Add',
+            'dt_last_visit' => 'Dt Last Visit',
+            'dt_birth' => 'Dt Birth',
+            'avatar' => 'Avatar',
+            'info' => 'Info',
+            'phone' => 'Phone',
+            'skype' => 'Skype',
+            'telegram' => 'Telegram',
+            'rating' => 'Rating',
+            'role' => 'Role',
+            'view_count' => 'View Count',
+            'show_new_message' => 'Show New Message',
+            'show_task_actions' => 'Show Task Actions',
+            'show_new_review' => 'Show New Review',
+            'show_contacts_customer' => 'Show Contacts Customer',
+            'show_profile' => 'Show Profile',
             'city_id' => 'City ID',
         ];
     }
@@ -161,16 +192,6 @@ class User extends ActiveRecord
     public function getPhotoOfWorks()
     {
         return $this->hasMany(PhotoOfWork::className(), ['user_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Profiles]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProfiles()
-    {
-        return $this->hasMany(Profile::className(), ['user_id' => 'id']);
     }
 
     /**
