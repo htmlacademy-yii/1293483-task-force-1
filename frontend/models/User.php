@@ -48,6 +48,9 @@ use yii\db\ActiveRecord;
  */
 class User extends ActiveRecord
 {
+    public $opinionsCount;
+    public $tasksCount;
+
     /**
      * {@inheritdoc}
      */
