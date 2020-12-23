@@ -30,27 +30,26 @@ use yii\db\ActiveRecord;
  * @property int|null $show_profile
  * @property int $city_id
  *
- * @property Favorites[] $favorites
- * @property Favorites[] $favorites0
+ * @property Favorites[] $customerFavorites
+ * @property Favorites[] $executorFavorites
  * @property User[] $executors
  * @property User[] $customers
- * @property Message[] $messages
- * @property Message[] $messages0
- * @property Opinion[] $opinions
- * @property Opinion[] $opinions0
+ * @property Message[] $senderMessages
+ * @property Message[] $receiverMessages
+ * @property Opinion[] $customerOpinions
+ * @property Opinion[] $executorOpinions
  * @property PhotoOfWork[] $photoOfWorks
  * @property Reply[] $replies
- * @property Task[] $tasks
- * @property Task[] $tasks0
+ * @property Task[] $customerTasks
+ * @property Task[] $executorTasks
  * @property City $city
  * @property UserSpecialization[] $userSpecializations
  * @property Category[] $categories
+ * @property User[] $opinionsCount
+ * @property User[] $tasksCount
  */
 class User extends ActiveRecord
 {
-    public $opinionsCount;
-    public $tasksCount;
-
     /**
      * {@inheritdoc}
      */
@@ -108,21 +107,21 @@ class User extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Favorites]].
+     * Gets query for [[CustomerFavorites]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getFavorites()
+    public function getCustomerFavorites()
     {
         return $this->hasMany(Favorites::className(), ['customer_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Favorites0]].
+     * Gets query for [[ExecutorFavorites]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getFavorites0()
+    public function getExecutorFavorites()
     {
         return $this->hasMany(Favorites::className(), ['executor_id' => 'id']);
     }
@@ -148,41 +147,41 @@ class User extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Messages]].
+     * Gets query for [[SenderMessages]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getMessages()
+    public function getSenderMessages()
     {
         return $this->hasMany(Message::className(), ['sender_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Messages0]].
+     * Gets query for [[ReceiverMessages]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getMessages0()
+    public function getReceiverMessages()
     {
         return $this->hasMany(Message::className(), ['receiver_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Opinions]].
+     * Gets query for [[CustomerOpinions]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getOpinions()
+    public function getCustomerOpinions()
     {
         return $this->hasMany(Opinion::className(), ['customer_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Opinions0]].
+     * Gets query for [[ExecutorOpinions]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getOpinions0()
+    public function getExecutorOpinions()
     {
         return $this->hasMany(Opinion::className(), ['executor_id' => 'id']);
     }
@@ -208,21 +207,21 @@ class User extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Tasks]].
+     * Gets query for [[CustomerTasks]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks()
+    public function getCustomerTasks()
     {
         return $this->hasMany(Task::className(), ['customer_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Tasks0]].
+     * Gets query for [[ExecutorTasks]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks0()
+    public function getExecutorTasks()
     {
         return $this->hasMany(Task::className(), ['executor_id' => 'id']);
     }
@@ -255,5 +254,25 @@ class User extends ActiveRecord
     public function getCategories()
     {
         return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable('user_specialization', ['user_id' => 'id']);
+    }
+
+    /**
+     * Получение количества отзывов об исполнителе
+     *
+     * @return int
+     */
+    public function getOpinionsCount()
+    {
+        return $this->executorOpinions ? count($this->executorOpinions) : 0;
+    }
+
+    /**
+     * Получение количества заданий у исполнителя
+     *
+     * @return int
+     */
+    public function getTasksCount()
+    {
+        return $this->executorTasks ? count($this->executorTasks) : 0;
     }
 }
