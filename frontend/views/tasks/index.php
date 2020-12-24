@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use frontend\models\TasksFilterForm;
+use yii\widgets\LinkPager;
 
 $this->title = 'Новые задания';
 ?>
@@ -29,14 +30,17 @@ $this->title = 'Новые задания';
         <?php endforeach; ?>
     </div>
     <div class="new-task__pagination">
-        <ul class="new-task__pagination-list">
-            <li class="pagination__item"><a href="#"></a></li>
-            <li class="pagination__item pagination__item--current">
-                <a>1</a></li>
-            <li class="pagination__item"><a href="#">2</a></li>
-            <li class="pagination__item"><a href="#">3</a></li>
-            <li class="pagination__item"><a href="#"></a></li>
-        </ul>
+        <?= LinkPager::widget([
+            'pagination' => $dataProvider->getPagination(),
+            'prevPageLabel' => '',
+            'nextPageLabel' => '',
+            'options' => [
+                'class' => 'new-task__pagination-list',
+            ],
+            'linkContainerOptions' => ['class' => 'pagination__item'],
+            'activePageCssClass' => 'pagination__item--current',
+
+        ]) ?>
     </div>
 </section>
 <section  class="search-task">

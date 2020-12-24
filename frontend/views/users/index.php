@@ -7,6 +7,7 @@ use frontend\models\UsersFilterForm;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use yii\widgets\LinkPager;
 
 $this->title = 'Исполнители';
 ?>
@@ -50,6 +51,19 @@ $this->title = 'Исполнители';
             </div>
         </div>
     <?php endforeach; ?>
+    <div class="new-task__pagination">
+        <?= LinkPager::widget([
+            'pagination' => $dataProvider->getPagination(),
+            'prevPageLabel' => '',
+            'nextPageLabel' => '',
+            'options' => [
+                'class' => 'new-task__pagination-list',
+            ],
+            'linkContainerOptions' => ['class' => 'pagination__item'],
+            'activePageCssClass' => 'pagination__item--current',
+
+        ]) ?>
+    </div>
 </section>
 <section  class="search-task">
     <div class="search-task__wrapper">

@@ -117,6 +117,9 @@ class UsersFilterForm extends Model
 
         return new ActiveDataProvider([
             'query' => $query,
+            'pagination' =>[
+                'pageSize' => 5,
+            ],
         ]);
     }
 }
