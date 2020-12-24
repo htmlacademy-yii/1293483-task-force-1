@@ -1,19 +1,17 @@
 <?php
 namespace frontend\controllers;
 
-use frontend\models\User;
 use yii\web\Controller;
+use frontend\models\UsersFilterForm;
+use Yii;
 
 class UsersController extends Controller
 {
     public function actionIndex()
     {
-        $users = User::find()
-            ->with(['categories', 'executorOpinions', 'executorTasks'])
-            ->where(['role' => User::ROLE_EXECUTOR])
-            ->orderBy('user.dt_add DESC')
-            ->all();
+        $model = new UsersFilterForm();
+        $model->load(Yii::$app->request->get());
 
-        return $this->render('index', ['users' => $users]);
+        return $this->render('index', ['dataProvider' => $model->getDataProvider(), 'model' => $model]);
     }
 }
