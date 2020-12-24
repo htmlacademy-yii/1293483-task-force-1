@@ -95,6 +95,24 @@ class UsersFilterForm extends Model
             $query->andWhere(['like', 'user.name', $this->search]);
         }
 
+        $sort = Yii::$app->request->get('sort');
+
+        if (!empty($sort)) {
+            switch ($sort) {
+                case 'rating':
+                    $query->orderBy('user.rating DESC');
+                    break;
+                case 'tasksCount':
+                    $query->orderBy('(SELECT COUNT(t.id) FROM task t WHERE user.id = t.executor_id) DESC');
+                    break;
+                case 'popular':
+                    $query->orderBy('user.view_count DESC');
+                    break;
+            }
+        } else {
+            $query->orderBy('user.dt_add DESC');
+        }
+
         $query->all();
 
         return new ActiveDataProvider([

@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use frontend\models\UsersFilterForm;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
 
 $this->title = 'Исполнители';
 ?>
@@ -13,14 +14,14 @@ $this->title = 'Исполнители';
     <div class="user__search-link">
         <p>Сортировать по:</p>
         <ul class="user__search-list">
-            <li class="user__search-item user__search-item--current">
-                <a href="#" class="link-regular">Рейтингу</a>
+            <li class="user__search-item <?= Yii::$app->request->get('sort') === 'rating' ? 'user__search-item--current' : '' ?>">
+                <a href="<?= Url::current(['sort' => 'rating']) ?>" class="link-regular">Рейтингу</a>
             </li>
-            <li class="user__search-item">
-                <a href="#" class="link-regular">Числу заказов</a>
+            <li class="user__search-item <?= Yii::$app->request->get('sort') === 'tasksCount' ? 'user__search-item--current' : '' ?>">
+                <a href="<?= Url::current(['sort' => 'tasksCount']) ?>" class="link-regular">Числу заказов</a>
             </li>
-            <li class="user__search-item">
-                <a href="#" class="link-regular">Популярности</a>
+            <li class="user__search-item <?= Yii::$app->request->get('sort') === 'popular' ? 'user__search-item--current' : '' ?>">
+                <a href="<?= Url::current(['sort' => 'popular']) ?>" class="link-regular">Популярности</a>
             </li>
         </ul>
     </div>
