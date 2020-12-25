@@ -1,4 +1,4 @@
-INSERT INTO categories (name, icon) VALUES
+INSERT INTO category (name, icon) VALUES
 ('Переводы', 'translation'),
 ('Уборка', 'clean'),
 ('Переезды', 'cargo'),
