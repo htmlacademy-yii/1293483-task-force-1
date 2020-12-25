@@ -10,8 +10,7 @@ class UsersController extends Controller
     {
         $users = User::find()
             ->with(['categories', 'executorOpinions', 'executorTasks'])
-            ->where(['role' => 'executor'])
-            ->groupBy('user.id')
+            ->where(['role' => User::ROLE_EXECUTOR])
             ->orderBy('user.dt_add DESC')
             ->all();
 

@@ -50,6 +50,9 @@ use yii\db\ActiveRecord;
  */
 class User extends ActiveRecord
 {
+    const ROLE_CUSTOMER = 'customer';
+    const ROLE_EXECUTOR = 'executor';
+
     /**
      * {@inheritdoc}
      */
