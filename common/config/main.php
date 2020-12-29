@@ -15,7 +15,9 @@ return [
             'enableStrictParsing' => false,
             'rules' => [
                 'tasks' => 'tasks/index',
+                'task/<id:\d+>' => 'tasks/view',
                 'users' => 'users/index',
+                'user/<id:\d+>' => 'users/view',
             ],
         ],
     ],

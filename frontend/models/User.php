@@ -274,8 +274,18 @@ class User extends ActiveRecord
      *
      * @return int
      */
-    public function getTasksCount()
+    public function getExecutorTasksCount()
     {
         return $this->executorTasks ? count($this->executorTasks) : 0;
+    }
+
+    /**
+     * Получение количества заданий у заказчика
+     *
+     * @return int
+     */
+    public function getCustomerTasksCount()
+    {
+        return $this->customerTasks ? count($this->customerTasks) : 0;
     }
 }

@@ -23,8 +23,6 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->registerCsrfMetaTags() ?>
     <?php $this->head() ?>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -103,7 +101,7 @@ AppAsset::register($this);
             </div>
             <div class="header__account">
                 <a class="header__account-photo">
-                    <img src="./img/user-photo.png"
+                    <img src="../img/user-photo.png"
                          width="43" height="44"
                          alt="Аватар пользователя">
                 </a>
@@ -178,7 +176,6 @@ AppAsset::register($this);
         </div>
     </footer>
 </div>
-<script src="js/dropzone.js"></script>
 <script>
   var dropzone = new Dropzone("div.create__file", {url: "/", paramName: "Attach"});
 </script>
