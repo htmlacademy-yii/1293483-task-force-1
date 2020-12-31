@@ -3,6 +3,11 @@
 /* @var $this yii\web\View */
 
 use yii\helpers\Html;
+use frontend\models\UsersFilterForm;
+use yii\helpers\ArrayHelper;
+use yii\widgets\ActiveForm;
+use yii\helpers\Url;
+use yii\widgets\LinkPager;
 
 $this->title = 'Исполнители';
 ?>
@@ -10,18 +15,18 @@ $this->title = 'Исполнители';
     <div class="user__search-link">
         <p>Сортировать по:</p>
         <ul class="user__search-list">
-            <li class="user__search-item user__search-item--current">
-                <a href="#" class="link-regular">Рейтингу</a>
+            <li class="user__search-item <?= Yii::$app->request->get('sort') === 'rating' ? 'user__search-item--current' : '' ?>">
+                <a href="<?= Url::current(['sort' => 'rating']) ?>" class="link-regular">Рейтингу</a>
             </li>
-            <li class="user__search-item">
-                <a href="#" class="link-regular">Числу заказов</a>
+            <li class="user__search-item <?= Yii::$app->request->get('sort') === 'tasksCount' ? 'user__search-item--current' : '' ?>">
+                <a href="<?= Url::current(['sort' => 'tasksCount']) ?>" class="link-regular">Числу заказов</a>
             </li>
-            <li class="user__search-item">
-                <a href="#" class="link-regular">Популярности</a>
+            <li class="user__search-item <?= Yii::$app->request->get('sort') === 'popular' ? 'user__search-item--current' : '' ?>">
+                <a href="<?= Url::current(['sort' => 'popular']) ?>" class="link-regular">Популярности</a>
             </li>
         </ul>
     </div>
-    <?php foreach ($users as $user) : ?>
+    <?php foreach ($dataProvider->getModels() as $user) : ?>
         <div class="content-view__feedback-card user__search-wrapper">
             <div class="feedback-card__top">
                 <div class="user__search-icon">
@@ -46,37 +51,68 @@ $this->title = 'Исполнители';
             </div>
         </div>
     <?php endforeach; ?>
+    <div class="new-task__pagination">
+        <?= LinkPager::widget([
+            'pagination' => $dataProvider->getPagination(),
+            'prevPageLabel' => '',
+            'nextPageLabel' => '',
+            'options' => [
+                'class' => 'new-task__pagination-list',
+            ],
+            'linkContainerOptions' => ['class' => 'pagination__item'],
+            'activePageCssClass' => 'pagination__item--current',
+
+        ]) ?>
+    </div>
 </section>
 <section  class="search-task">
     <div class="search-task__wrapper">
-        <form class="search-task__form" name="users" method="post" action="#">
+        <?php $form = ActiveForm::begin([
+            'id' => 'tasks-form',
+            'method' => 'get',
+            'action' => [''],
+            'options' => [
+                'class' => 'search-task__form',
+                'name' => 'users',
+            ],
+            'fieldConfig' => [
+                'options' => [
+                    'tag' => false,
+                ],
+            ],
+        ]); ?>
             <fieldset class="search-task__categories">
                 <legend>Категории</legend>
-                <input class="visually-hidden checkbox__input" id="101" type="checkbox" name="" value="" checked disabled>
-                <label for="101">Курьерские услуги </label>
-                <input class="visually-hidden checkbox__input" id="102" type="checkbox" name="" value="" checked>
-                <label  for="102">Грузоперевозки </label>
-                <input class="visually-hidden checkbox__input" id="103" type="checkbox" name="" value="">
-                <label  for="103">Переводы </label>
-                <input class="visually-hidden checkbox__input" id="104" type="checkbox" name="" value="">
-                <label  for="104">Строительство и ремонт </label>
-                <input class="visually-hidden checkbox__input" id="105" type="checkbox" name="" value="">
-                <label  for="105">Выгул животных </label>
+                <?= $form->field($model, 'categories')
+                    ->label(false)
+                    ->checkboxList(ArrayHelper::map(UsersFilterForm::getCategories(), 'id', 'name'), [
+                        'unselect' => null,
+                        'item' =>
+                            function($index, $label, $name, $checked, $value) {
+                                return Html::checkbox($name, $checked, [
+                                    'class' => 'visually-hidden checkbox__input',
+                                    'name' => $name,
+                                    'value' => $value,
+                                    'id' => $value,
+                                ]) . Html::label($label, $value);
+                            }
+                    ]) ?>
             </fieldset>
             <fieldset class="search-task__categories">
                 <legend>Дополнительно</legend>
-                <input class="visually-hidden checkbox__input" id="106" type="checkbox" name="" value="" disabled>
-                <label for="106">Сейчас свободен</label>
-                <input class="visually-hidden checkbox__input" id="107" type="checkbox" name="" value="" checked>
-                <label for="107">Сейчас онлайн</label>
-                <input class="visually-hidden checkbox__input" id="108" type="checkbox" name="" value="" checked>
-                <label for="108">Есть отзывы</label>
-                <input class="visually-hidden checkbox__input" id="109" type="checkbox" name="" value="" checked>
-                <label for="109">В избранном</label>
+                <?= $form->field($model, 'free', ['template' => "{input}\n{label}"])
+                    ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => null], false) ?>
+                <?= $form->field($model, 'online', ['template' => "{input}\n{label}"])
+                    ->checkbox(['class' => 'visually-hidden  checkbox__input', 'uncheck' => null], false) ?>
+                <?= $form->field($model, 'hasOpinions', ['template' => "{input}\n{label}"])
+                    ->checkbox(['class' => 'visually-hidden  checkbox__input', 'uncheck' => null], false) ?>
+                <?= $form->field($model, 'inFavorites', ['template' => "{input}\n{label}"])
+                    ->checkbox(['class' => 'visually-hidden  checkbox__input', 'uncheck' => null], false) ?>
             </fieldset>
-            <label class="search-task__name" for="110">Поиск по имени</label>
-            <input class="input-middle input" id="110" type="search" name="q" placeholder="">
-            <button class="button" type="submit">Искать</button>
-        </form>
+            <?= $form->field($model, 'search', ['template' => "{label}\n{input}"])
+                ->textInput(['class' => 'input-middle input'])
+                ->label(null, ['class' => 'search-task__name']) ?>
+            <?= Html::submitButton('Искать', ['class' => 'button']) ?>
+        <?php ActiveForm::end(); ?>
     </div>
 </section>

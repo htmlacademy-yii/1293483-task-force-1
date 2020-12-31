@@ -1,15 +1,17 @@
 <?php
 namespace frontend\controllers;
 
-use frontend\models\Task;
 use yii\web\Controller;
+use frontend\models\TasksFilterForm;
+use Yii;
 
 class TasksController extends Controller
 {
     public function actionIndex()
     {
-        $tasks = Task::find()->with('category')->andWhere(['status' => 'new'])->orderBy('dt_add DESC')->all();
+        $model = new TasksFilterForm();
+        $model->load(Yii::$app->request->get());
 
-        return $this->render('index', ['tasks' => $tasks]);
+        return $this->render('index', ['dataProvider' => $model->getDataProvider(), 'model' => $model]);
     }
 }

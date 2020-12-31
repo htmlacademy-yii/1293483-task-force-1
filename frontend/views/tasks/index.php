@@ -3,13 +3,17 @@
 /* @var $this yii\web\View */
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use frontend\models\TasksFilterForm;
+use yii\widgets\LinkPager;
 
 $this->title = 'Новые задания';
 ?>
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1><?= Html::encode($this->title) ?></h1>
-        <?php foreach ($tasks as $task) : ?>
+        <?php foreach ($dataProvider->getModels() as $task) : ?>
             <div class="new-task__card">
                 <div class="new-task__title">
                     <a href="#" class="link-regular"><h2><?= $task->title ?></h2></a>
@@ -26,48 +30,66 @@ $this->title = 'Новые задания';
         <?php endforeach; ?>
     </div>
     <div class="new-task__pagination">
-        <ul class="new-task__pagination-list">
-            <li class="pagination__item"><a href="#"></a></li>
-            <li class="pagination__item pagination__item--current">
-                <a>1</a></li>
-            <li class="pagination__item"><a href="#">2</a></li>
-            <li class="pagination__item"><a href="#">3</a></li>
-            <li class="pagination__item"><a href="#"></a></li>
-        </ul>
+        <?= LinkPager::widget([
+            'pagination' => $dataProvider->getPagination(),
+            'prevPageLabel' => '',
+            'nextPageLabel' => '',
+            'options' => [
+                'class' => 'new-task__pagination-list',
+            ],
+            'linkContainerOptions' => ['class' => 'pagination__item'],
+            'activePageCssClass' => 'pagination__item--current',
+
+        ]) ?>
     </div>
 </section>
 <section  class="search-task">
     <div class="search-task__wrapper">
-        <form class="search-task__form" name="test" method="post" action="#">
+        <?php $form = ActiveForm::begin([
+            'id' => 'tasks-form',
+            'method' => 'get',
+            'action' => [''],
+            'options' => [
+                'class' => 'search-task__form',
+                'name' => 'test',
+            ],
+            'fieldConfig' => [
+                'options' => [
+                    'tag' => false,
+                ],
+            ],
+        ]); ?>
             <fieldset class="search-task__categories">
                 <legend>Категории</legend>
-                <input class="visually-hidden checkbox__input" id="1" type="checkbox" name="" value="" checked>
-                <label for="1">Курьерские услуги </label>
-                <input class="visually-hidden checkbox__input" id="2" type="checkbox" name="" value="" checked>
-                <label  for="2">Грузоперевозки </label>
-                <input class="visually-hidden checkbox__input" id="3" type="checkbox" name="" value="">
-                <label  for="3">Переводы </label>
-                <input class="visually-hidden checkbox__input" id="4" type="checkbox" name="" value="">
-                <label  for="4">Строительство и ремонт </label>
-                <input class="visually-hidden checkbox__input" id="5" type="checkbox" name="" value="">
-                <label  for="5">Выгул животных </label>
+                <?= $form->field($model, 'categories')
+                    ->label(false)
+                    ->checkboxList(ArrayHelper::map(TasksFilterForm::getCategories(), 'id', 'name'), [
+                        'unselect' => null,
+                        'item' =>
+                            function($index, $label, $name, $checked, $value) {
+                                return Html::checkbox($name, $checked, [
+                                    'class' => 'visually-hidden checkbox__input',
+                                    'name' => $name,
+                                    'value' => $value,
+                                    'id' => $value,
+                                ]) . Html::label($label, $value);
+                            }
+                    ]) ?>
             </fieldset>
             <fieldset class="search-task__categories">
                 <legend>Дополнительно</legend>
-                <input class="visually-hidden checkbox__input" id="6" type="checkbox" name="" value="">
-                <label for="6">Без откликов</label>
-                <input class="visually-hidden checkbox__input" id="7" type="checkbox" name="" value="" checked>
-                <label for="7">Удаленная работа </label>
+                <?= $form->field($model, 'noReply', ['template' => "{input}\n{label}"])
+                    ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => null], false) ?>
+                <?= $form->field($model, 'remoteWork', ['template' => "{input}\n{label}"])
+                    ->checkbox(['class' => 'visually-hidden  checkbox__input', 'uncheck' => null], false) ?>
             </fieldset>
-            <label class="search-task__name" for="8">Период</label>
-            <select class="multiple-select input" id="8"size="1" name="time[]">
-                <option value="day">За день</option>
-                <option selected value="week">За неделю</option>
-                <option value="month">За месяц</option>
-            </select>
-            <label class="search-task__name" for="9">Поиск по названию</label>
-            <input class="input-middle input" id="9" type="search" name="q" placeholder="">
-            <button class="button" type="submit">Искать</button>
-        </form>
+            <?= $form->field($model, 'period', ['template' => "{label}\n{input}"])
+                ->dropDownList(TasksFilterForm::getPeriod(), ['class' => 'multiple-select input', 'prompt' =>'За всё время',])
+                ->label(null, ['class' => 'search-task__name']) ?>
+            <?= $form->field($model, 'search', ['template' => "{label}\n{input}"])
+                ->textInput(['unselect' => null, 'class' => 'input-middle input'])
+                ->label(null, ['class' => 'search-task__name']) ?>
+            <?= Html::submitButton('Искать', ['class' => 'button']) ?>
+        <?php ActiveForm::end(); ?>
     </div>
 </section>
