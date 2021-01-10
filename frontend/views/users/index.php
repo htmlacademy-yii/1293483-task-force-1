@@ -31,11 +31,11 @@ $this->title = 'Исполнители';
             <div class="feedback-card__top">
                 <div class="user__search-icon">
                     <a href="#"><img src="<?= $user->avatar ?? './img/no-avatar.svg' ?>." width="65" height="65"></a>
-                    <span><?= Yii::$app->i18n->format('{n, plural, =0{нет заданий} one{# задание} many{# заданий} other{# задания}}', ['n' => $user->tasksCount], 'ru_RU') ?> </span>
+                    <span><?= Yii::$app->i18n->format('{n, plural, =0{нет заданий} one{# задание} many{# заданий} other{# задания}}', ['n' => $user->executorTasksCount], 'ru_RU') ?> </span>
                     <span><?= Yii::$app->i18n->format('{n, plural, =0{нет отзывов} one{# отзыв} many{# отзывов} other{# отзыва}}', ['n' => $user->opinionsCount], 'ru_RU') ?></span>
                 </div>
                 <div class="feedback-card__top--name user__search-card">
-                    <p class="link-name"><a href="#" class="link-regular"><?= $user->name ?></a></p>
+                    <p class="link-name"><a href="<?= Url::to(['users/view', 'id' => $user->id]) ?>" class="link-regular"><?= $user->name ?></a></p>
                     <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
                     <b><?= $user->rating ?? 0 ?></b>
                     <p class="user__search-content">
