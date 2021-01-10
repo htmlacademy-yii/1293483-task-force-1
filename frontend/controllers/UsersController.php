@@ -22,7 +22,7 @@ class UsersController extends Controller
         $user = User::find()->where(['id' => $id, 'role' => User::ROLE_EXECUTOR])->one();
 
         if (!$user) {
-            throw new NotFoundHttpException("Испольнитель с ID $id не найден");
+            throw new NotFoundHttpException("Исполнитель не найден");
         }
 
         return $this->render('view', ['user' => $user]);
