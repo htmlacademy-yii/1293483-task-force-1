@@ -18,6 +18,7 @@ return [
                 'task/<id:\d+>' => 'tasks/view',
                 'users' => 'users/index',
                 'user/<id:\d+>' => 'users/view',
+                'signup' => 'signup/index',
             ],
         ],
     ],
