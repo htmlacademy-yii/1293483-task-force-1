@@ -10,8 +10,6 @@ class SignupController extends Controller
 {
     public function actionIndex()
     {
-        $errors =[];
-
         $model = new SignupForm();
 
         if (Yii::$app->request->getIsPost()) {
@@ -20,10 +18,8 @@ class SignupController extends Controller
             if ($model->validate() && $model->signup()) {
                 Yii::$app->response->redirect(Url::to('tasks'));
             }
-
-            $errors = $model->getErrors();
         }
 
-        return $this->render('index', ['model' => $model, 'errors' => $errors]);
+        return $this->render('index', ['model' => $model]);
     }
 }
