@@ -25,14 +25,14 @@ AppAsset::register($this);
     <?php $this->head() ?>
 </head>
 
-<body>
+<body class="landing">
 <?php $this->beginBody() ?>
 <div class="table-layout">
-    <header class="page-header">
-        <div class="main-container page-header__container">
-            <div class="page-header__logo">
-                <a href="index.html">
-                    <svg class="page-header__logo-image" id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1634 646.35">
+    <header class=" page-header--index">
+        <div class="main-container page-header__container page-header__container--index">
+            <div class="page-header__logo--index">
+                <a>
+                    <svg class="logo-image--index" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1634 646.35">
                         <title>taskforce_logo2-01</title>
                         <g>
                             <g>
@@ -57,80 +57,22 @@ AppAsset::register($this);
                         </g>
                     </svg>
                 </a>
+                <p>Работа там, где ты!</p>
             </div>
-            <div class="header__nav">
-                <ul class="header-nav__list site-list">
-                    <li class="site-list__item">
-                        <a href="<?= Url::to(['tasks/index']) ?>">Задания</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="#">Создать задание</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="#">Мой профиль</a>
-                    </li>
-                </ul>
+            <div class="header__account--index">
+                <a href="#" class="header__account-enter open-modal" data-for="enter-form">
+                    <span>Вход</span>
+                </a>
+                или
+                <a href="<?= Url::to(['signup/index']) ?>" class="header__account-registration">
+                    Регистрация
+                </a>
             </div>
-            <?php if(Yii::$app->request->pathInfo !== 'signup'): ?>
-                <div class="header__town">
-                    <select class="multiple-select input town-select" size="1" name="town[]">
-                        <option value="Moscow">Москва</option>
-                        <option selected value="SPB">Санкт-Петербург</option>
-                        <option value="Krasnodar">Краснодар</option>
-                        <option value="Irkutsk">Иркутск</option>
-                        <option value="Vladivostok">Владивосток</option>
-                    </select>
-                </div>
-                <div class="header__lightbulb"></div>
-                <div class="lightbulb__pop-up">
-                    <h3>Новые события</h3>
-                    <p class="lightbulb__new-task lightbulb__new-task--message">
-                        Новое сообщение в чате
-                        <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                    </p>
-                    <p class="lightbulb__new-task lightbulb__new-task--executor">
-                        Выбран исполнитель для
-                        <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                    </p>
-                    <p class="lightbulb__new-task lightbulb__new-task--close">
-                        Завершено задание
-                        <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                    </p>
-                </div>
-                <div class="header__account">
-                    <a class="header__account-photo">
-                        <img src="<?= Yii::$app->user->identity->avatar ?? './img/no-avatar.svg' ?>"
-                             width="43" height="44"
-                             alt="Аватар пользователя">
-                    </a>
-                    <span class="header__account-name">
-                        <?= Yii::$app->user->identity->name ?>
-                    </span>
-                </div>
-                <div class="account__pop-up">
-                    <ul class="account__pop-up-list">
-                        <li>
-                            <a href="#">Мои задания</a>
-                        </li>
-                        <li>
-                            <a href="#">Настройки</a>
-                        </li>
-                        <li>
-                            <a href="<?= Url::to(['landing/logout']) ?>">Выход</a>
-                        </li>
-                    </ul>
-                </div>
-            <?php endif; ?>
         </div>
     </header>
 
-    <main class="page-main">
-        <div class="main-container page-container">
-            <?= $content ?>
-        </div>
+    <main>
+        <?= $content ?>
     </main>
 
     <footer class="page-footer">
@@ -168,33 +110,22 @@ AppAsset::register($this);
                 </ul>
             </div>
             <div class="page-footer__copyright">
-                <a>
+                <a href="https://htmlacademy.ru">
                     <img class="copyright-logo"
                          src="./img/academy-logo.png"
                          width="185" height="63"
                          alt="Логотип HTML Academy">
                 </a>
             </div>
-            <?php if(Yii::$app->request->pathInfo === 'signup'): ?>
-                <div class="clipart-woman">
-                    <img src="./img/clipart-woman.png" width="238" height="450">
-                </div>
-                <div class="clipart-message">
-                    <div class="clipart-message-text">
-                        <h2>Знаете ли вы, что?</h2>
-                        <p>После регистрации вам будет доступно более
-                            двух тысяч заданий из двадцати разных категорий.</p>
-                        <p>В среднем, наши исполнители зарабатывают
-                            от 500 рублей в час.</p>
-                    </div>
-                </div>
-            <?php endif; ?>
         </div>
     </footer>
 </div>
-<script>
-  var dropzone = new Dropzone("div.create__file", {url: "/", paramName: "Attach"});
-</script>
+
+<section class="modal enter-form form-modal" id="enter-form">
+    <?= $this->blocks['loginForm'] ?>
+</section>
+
+<div class="overlay"></div>
 <?php $this->endBody() ?>
 </body>
 </html>
