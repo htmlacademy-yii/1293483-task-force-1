@@ -2,14 +2,17 @@
 namespace frontend\controllers;
 
 use frontend\models\SignupForm;
+use frontend\models\City;
 use yii\helpers\Url;
 use yii\web\Controller;
 use Yii;
 
-class SignupController extends Controller
+class LandingController extends Controller
 {
-    public function actionIndex()
+    public function actionSignup()
     {
+        $cities = City::find()->asArray()->all();
+
         $model = new SignupForm();
 
         if (Yii::$app->request->getIsPost()) {
@@ -20,6 +23,6 @@ class SignupController extends Controller
             }
         }
 
-        return $this->render('index', ['model' => $model]);
+        return $this->render('signup', ['model' => $model, 'cities' => $cities]);
     }
 }

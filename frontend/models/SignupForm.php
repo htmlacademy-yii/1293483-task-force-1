@@ -12,21 +12,17 @@ class SignupForm extends Model
 {
     public $email;
     public $name;
-    public $city_id;
+    public $cityId;
     public $password;
 
-    static public function getCities()
-    {
-        return City::find()->asArray()->all();
-    }
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['email', 'name', 'city_id', 'password'], 'required'],
-            [['email', 'name', 'city_id', 'password'], 'safe'],
+            [['email', 'name', 'cityId', 'password'], 'required'],
+            [['email', 'name', 'cityId', 'password'], 'safe'],
             [['name', 'email'], 'string', 'min' => 2, 'max' => 100],
 
             ['email', 'email', 'message' => 'Введите валидный адрес электронной почты'],
@@ -46,7 +42,7 @@ class SignupForm extends Model
         return [
             'email' => 'Электронная почта',
             'name' => 'Ваше имя',
-            'city_id' => 'Город проживания',
+            'cityId' => 'Город проживания',
             'password' => 'Пароль',
         ];
     }
@@ -63,7 +59,7 @@ class SignupForm extends Model
 
         $user->email = $this->email;
         $user->name = $this->name;
-        $user->city_id = $this->city_id;
+        $user->city_id = $this->cityId;
         $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
         $user->role = User::ROLE_CUSTOMER;
 

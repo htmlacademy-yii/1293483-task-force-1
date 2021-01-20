@@ -26,9 +26,9 @@ $this->title = 'Регистрация аккаунта';
         <?= $form->field($model, 'name', ['errorOptions' => ['tag' => 'span', 'style' => 'margin-bottom: 29px;']])
             ->textInput(['class' => 'input textarea', 'rows' => 1])
             ->label(null, ['class' => $model->hasErrors('name') ? 'input-danger' : '']) ?>
-        <?= $form->field($model, 'city_id', ['errorOptions' => ['tag' => 'span', 'style' => 'margin-bottom: 29px;']])
-            ->dropDownList(ArrayHelper::map(SignupForm::getCities(), 'id', 'name'), ['class' => 'multiple-select input town-select registration-town'])
-            ->label(null, ['class' => $model->hasErrors('city_id') ? 'input-danger' : ''])?>
+        <?= $form->field($model, 'cityId', ['errorOptions' => ['tag' => 'span', 'style' => 'margin-bottom: 29px;']])
+            ->dropDownList(ArrayHelper::map($cities, 'id', 'name'), ['class' => 'multiple-select input town-select registration-town'])
+            ->label(null, ['class' => $model->hasErrors('cityId') ? 'input-danger' : ''])?>
         <?= $form->field($model, 'password', ['errorOptions' => ['tag' => 'span', 'style' => 'margin-bottom: 29px;']])
             ->passwordInput(['class' => 'input textarea'])
             ->label(null, ['class' => $model->hasErrors('password') ? 'input-danger' : '']) ?>
