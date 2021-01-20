@@ -80,8 +80,8 @@ use yii\helpers\StringHelper;
                 <div class="landing-task">
                     <div class="landing-task-top task-<?= $task->category->icon ?>"></div>
                     <div class="landing-task-description">
-                        <h3><a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>" class="link-regular" title="<?= $task->title ?>"><?= StringHelper::truncate($task->title,MAX_LENGTH_TASK_TITLE,'...') ?></a></h3>
-                        <p><?= StringHelper::truncate($task->description,MAX_LENGTH_TASK_DESCRIPTION,'...') ?></p>
+                        <h3><a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>" class="link-regular" title="<?= $task->title ?>"><?= $task->shortTitle ?>...</a></h3>
+                        <p><?= $task->shortDescription ?>...</p>
                     </div>
                     <div class="landing-task-info">
                         <div class="task-info-left">

@@ -14,8 +14,6 @@ use yii\widgets\ActiveForm;
 
 class LandingController extends Controller
 {
-    public $layout = 'landing';
-
     public function behaviors()
     {
         return [
@@ -24,7 +22,7 @@ class LandingController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index'],
+                        'actions' => ['index', 'signup'],
                         'roles' => ['?'],
                     ],
                     [
@@ -47,8 +45,7 @@ class LandingController extends Controller
 
     public function actionIndex()
     {
-        define('MAX_LENGTH_TASK_TITLE', 30);
-        define('MAX_LENGTH_TASK_DESCRIPTION', 40);
+        $this->layout = 'landing';
 
         $tasks = Task::find()->with('category')->orderBy('dt_add DESC')->limit(4)->all();
 
@@ -75,8 +72,6 @@ class LandingController extends Controller
 
     public function actionSignup()
     {
-        $this->layout = 'main';
-
         $cities = City::find()->asArray()->all();
 
         $model = new SignupForm();

@@ -64,7 +64,7 @@ AppAsset::register($this);
                     <span>Вход</span>
                 </a>
                 или
-                <a href="<?= Url::to(['signup/index']) ?>" class="header__account-registration">
+                <a href="<?= Url::to(['landing/signup']) ?>" class="header__account-registration">
                     Регистрация
                 </a>
             </div>
@@ -99,7 +99,7 @@ AppAsset::register($this);
                         <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['signup/index']) ?>">Регистрация</a>
+                        <a href="<?= Url::to(['landing/signup']) ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
                         <a href="">Создать задание</a>
