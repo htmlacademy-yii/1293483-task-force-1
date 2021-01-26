@@ -67,7 +67,7 @@ AppAsset::register($this);
                         <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
                     </li>
                     <li class="site-list__item">
-                        <a href="#">Создать задание</a>
+                        <a href="<?= Url::to(['tasks/create']) ?>">Создать задание</a>
                     </li>
                     <li class="site-list__item">
                         <a href="#">Мой профиль</a>
@@ -160,7 +160,7 @@ AppAsset::register($this);
                         <a href="<?= Url::to(['signup/index']) ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Создать задание</a>
+                        <a href="<?= Url::to(['tasks/create']) ?>">Создать задание</a>
                     </li>
                     <li class="links__item">
                         <a href="">Справка</a>
@@ -192,10 +192,10 @@ AppAsset::register($this);
         </div>
     </footer>
 </div>
-<script>
-  var dropzone = new Dropzone("div.create__file", {url: "/", paramName: "Attach"});
-</script>
 <?php $this->endBody() ?>
+<script>
+  var dropzone = new Dropzone("div.create__file", {url: "/load-files", paramName: "files"});
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>

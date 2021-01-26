@@ -77,9 +77,9 @@ CREATE TABLE task (
     FOREIGN KEY (category_id) REFERENCES category(id),
     customer_id INT UNSIGNED NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES user(id),
-    executor_id INT UNSIGNED NOT NULL,
+    executor_id INT UNSIGNED,
     FOREIGN KEY (executor_id) REFERENCES user(id),
-    city_id INT UNSIGNED NOT NULL,
+    city_id INT UNSIGNED,
     FOREIGN KEY (city_id) REFERENCES city(id),
 
     FULLTEXT (title)
