@@ -61,7 +61,7 @@ class Task extends ActiveRecord
     {
         return [
             [['dt_add', 'dt_end'], 'safe'],
-            [['title', 'description', 'category_id', 'customer_id', 'executor_id', 'city_id'], 'required'],
+            [['title', 'description', 'category_id', 'customer_id'], 'required'],
             [['description'], 'string'],
             [['budget', 'category_id', 'customer_id', 'executor_id', 'city_id'], 'integer'],
             [['title'], 'string', 'max' => 100],

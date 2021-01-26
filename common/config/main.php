@@ -16,6 +16,8 @@ return [
             'rules' => [
                 'tasks' => 'tasks/index',
                 'task/<id:\d+>' => 'tasks/view',
+                'create' => 'tasks/create',
+                'load-files' => 'tasks/load-files',
                 'users' => 'users/index',
                 'user/<id:\d+>' => 'users/view',
                 'signup' => 'landing/signup',
