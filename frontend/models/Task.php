@@ -4,6 +4,7 @@ namespace frontend\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\StringHelper;
 
 /**
  * This is the model class for table "task".
@@ -31,6 +32,8 @@ use yii\db\ActiveRecord;
  * @property User $customer
  * @property User $executor
  * @property City $city
+ * @property string $shortTitle
+ * @property string $shortDescription
  */
 class Task extends ActiveRecord
 {
@@ -39,6 +42,9 @@ class Task extends ActiveRecord
     const STATUS_IN_WORK = 'inWork';
     const STATUS_DONE = 'done';
     const STATUS_FAILED = 'failed';
+
+    private const MAX_LENGTH_TASK_TITLE = 30;
+    private const MAX_LENGTH_TASK_DESCRIPTION = 40;
 
     /**
      * {@inheritdoc}
@@ -168,5 +174,25 @@ class Task extends ActiveRecord
     public function getCity()
     {
         return $this->hasOne(City::className(), ['id' => 'city_id']);
+    }
+
+    /**
+     * Получение обрезанного заголовка задания
+     *
+     * @return string
+     */
+    public function getShortTitle(): string
+    {
+        return StringHelper::truncate($this->title,self::MAX_LENGTH_TASK_TITLE);
+    }
+
+    /**
+     * Получение обрезанного описания задания
+     *
+     * @return string
+     */
+    public function getShortDescription(): string
+    {
+        return StringHelper::truncate($this->description,self::MAX_LENGTH_TASK_DESCRIPTION);
     }
 }

@@ -7,7 +7,7 @@ use Yii;
 use frontend\models\Task;
 use yii\web\NotFoundHttpException;
 
-class TasksController extends Controller
+class TasksController extends SecuredController
 {
     public function actionIndex()
     {

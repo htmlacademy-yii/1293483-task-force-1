@@ -19,6 +19,7 @@ return [
                 'users' => 'users/index',
                 'user/<id:\d+>' => 'users/view',
                 'signup' => 'landing/signup',
+                'logout' => 'landing/logout',
             ],
         ],
     ],
